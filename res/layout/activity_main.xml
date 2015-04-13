@@ -1,0 +1,73 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <TextView
+        android:id="@+id/text_freqency"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10sp"
+        android:gravity="center_horizontal"
+        android:text="frequency:0Hz"
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/text_status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_freqency"
+        android:layout_margin="10sp"
+        android:gravity="center_horizontal"
+        android:text="status:stop"
+        android:textSize="30sp" />
+
+    <SeekBar
+        android:id="@+id/seekbar_freqency"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_status"
+        android:layout_centerInParent="true"
+        android:layout_margin="10sp"
+        android:max="20000" />
+
+    <Button
+        android:id="@+id/button_play"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/seekbar_freqency"
+        android:layout_margin="10sp"
+        android:gravity="center_horizontal"
+        android:text="play" />
+
+    <Button
+        android:id="@+id/button_stop"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/button_play"
+        android:layout_margin="10sp"
+        android:enabled="false"
+        android:gravity="center_horizontal"
+        android:text="stop" />
+
+    <Button
+        android:id="@+id/button_play_background"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/button_stop"
+        android:layout_margin="10sp"
+        android:gravity="center_horizontal"
+        android:text="play in background" />
+
+    <Button
+        android:id="@+id/button_stop_background"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/button_play_background"
+        android:layout_margin="10sp"
+        android:enabled="false"
+        android:gravity="center_horizontal"
+        android:text="stop in background" />
+
+</RelativeLayout>
