@@ -35,7 +35,7 @@ public class MainActivity extends Activity {
 
 	private int status;// 0:停止,1:アプリ再生,2:バックグラウンド再生
 	private final static String strStatus = "status:";
-	private String[] strStatuses = {"stop", "play", "play in backround"};
+	private String[] strStatuses = {"stop", "play", "play in background"};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
