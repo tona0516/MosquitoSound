@@ -3,10 +3,14 @@ package com.tona.mosquitosound;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.Spanned;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
@@ -22,6 +26,7 @@ public class MainActivity extends Activity {
 	private SeekBar seekBar;
 	private TextView textFrequency;
 	private TextView textStatus;
+	private EditText editFrequency;
 	private Button buttonPlay;
 	private Button buttonStop;
 	private Button buttonBackgroundPlay;
@@ -57,6 +62,52 @@ public class MainActivity extends Activity {
 
 		textFrequency = (TextView) findViewById(R.id.text_freqency);
 		textStatus = (TextView) findViewById(R.id.text_status);
+		editFrequency = (EditText) findViewById(R.id.edit_frequency);
+		editFrequency.addTextChangedListener(new TextWatcher() {
+
+			private int currentLength;
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO 自動生成されたメソッド・スタブ
+
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+				// TODO 自動生成されたメソッド・スタブ
+				currentLength = s.toString().length();
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO 自動生成されたメソッド・スタブ
+				if (s.toString().length() < currentLength) {
+		            return;
+		        }
+				boolean unfixed = false;
+				Object[] spanned = s.getSpans(0, s.length(), Object.class);
+				if (spanned != null) {
+					for (Object obj : spanned) {
+						// UnderlineSpan での判定から getSpanFlags への判定に変更。
+						if ((s.getSpanFlags(obj) & Spanned.SPAN_COMPOSING) == Spanned.SPAN_COMPOSING) {
+							unfixed = true;
+						}
+					}
+				}
+				if (!unfixed) {
+					try {
+						int input = Integer.parseInt(editFrequency.getText().toString());
+						if (input >= 0 && input <= 20000) {
+							seekBar.setProgress(input);
+						}
+					} catch (NumberFormatException e) {
+						e.printStackTrace();
+					}
+					editFrequency.setSelection(editFrequency.getText().toString().length());
+				}
+			}
+		});
 
 		seekBar = (SeekBar) findViewById(R.id.seekbar_freqency);
 		seekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
@@ -68,7 +119,7 @@ public class MainActivity extends Activity {
 			}
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-				textFrequency.setText("frequency:" + progress + "Hz");
+				editFrequency.setText("" + progress);
 			}
 		});
 

@@ -2,24 +2,41 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:layout_gravity="center_horizontal" >
 
-    <TextView
-        android:id="@+id/text_freqency"
+    <RelativeLayout
+        android:id="@+id/text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10sp"
-        android:gravity="center_horizontal"
-        android:text="frequency:0Hz"
-        android:textSize="25sp" />
+        android:gravity="center_horizontal">
+
+        <TextView
+            android:id="@+id/text_freqency"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10sp"
+            android:text="frequency:"
+            android:gravity="center_horizontal"
+            android:textSize="25sp" />
+
+        <EditText
+            android:id="@+id/edit_frequency"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/text_freqency"
+            android:singleLine="true"
+            android:text="0"
+            android:textSize="25sp" />
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/text_status"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/text_freqency"
-        android:layout_margin="10sp"
+        android:layout_below="@id/text"
         android:gravity="center_horizontal"
+        android:layout_margin="10sp"
         android:text="status:stop"
         android:textSize="25sp" />
 
@@ -38,7 +55,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/seekbar_freqency"
         android:layout_margin="10sp"
-        android:gravity="center_horizontal"
         android:text="play" />
 
     <Button
@@ -48,7 +64,6 @@
         android:layout_below="@id/button_play"
         android:layout_margin="10sp"
         android:enabled="false"
-        android:gravity="center_horizontal"
         android:text="stop" />
 
     <Button
@@ -57,7 +72,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/button_stop"
         android:layout_margin="10sp"
-        android:gravity="center_horizontal"
         android:text="play in background" />
 
     <Button
@@ -67,7 +81,6 @@
         android:layout_below="@id/button_play_background"
         android:layout_margin="10sp"
         android:enabled="false"
-        android:gravity="center_horizontal"
         android:text="stop in background" />
 
 </RelativeLayout>
