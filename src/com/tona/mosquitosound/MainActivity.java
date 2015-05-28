@@ -1,20 +1,27 @@
 package com.tona.mosquitosound;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.Spanned;
-import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
@@ -31,6 +38,7 @@ public class MainActivity extends Activity {
 	private Button buttonStop;
 	private Button buttonBackgroundPlay;
 	private Button buttonBackgroundStop;
+	private Spinner spinnerHighFrequency;
 
 	private MosquitoSound ms;
 
@@ -63,39 +71,13 @@ public class MainActivity extends Activity {
 		textFrequency = (TextView) findViewById(R.id.text_freqency);
 		textStatus = (TextView) findViewById(R.id.text_status);
 		editFrequency = (EditText) findViewById(R.id.edit_frequency);
-		editFrequency.addTextChangedListener(new TextWatcher() {
-
-			private int currentLength;
-
+		editFrequency.setRawInputType(Configuration.KEYBOARD_QWERTY);
+		editFrequency.setImeOptions(EditorInfo.IME_ACTION_GO);
+		editFrequency.setOnEditorActionListener(new OnEditorActionListener() {
 			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
+			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 				// TODO 自動生成されたメソッド・スタブ
-
-			}
-
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-				// TODO 自動生成されたメソッド・スタブ
-				currentLength = s.toString().length();
-			}
-
-			@Override
-			public void afterTextChanged(Editable s) {
-				// TODO 自動生成されたメソッド・スタブ
-				if (s.toString().length() < currentLength) {
-		            return;
-		        }
-				boolean unfixed = false;
-				Object[] spanned = s.getSpans(0, s.length(), Object.class);
-				if (spanned != null) {
-					for (Object obj : spanned) {
-						// UnderlineSpan での判定から getSpanFlags への判定に変更。
-						if ((s.getSpanFlags(obj) & Spanned.SPAN_COMPOSING) == Spanned.SPAN_COMPOSING) {
-							unfixed = true;
-						}
-					}
-				}
-				if (!unfixed) {
+				if (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
 					try {
 						int input = Integer.parseInt(editFrequency.getText().toString());
 						if (input >= 0 && input <= 20000) {
@@ -104,8 +86,14 @@ public class MainActivity extends Activity {
 					} catch (NumberFormatException e) {
 						e.printStackTrace();
 					}
-					editFrequency.setSelection(editFrequency.getText().toString().length());
 				}
+				int len = editFrequency.getText().toString().length();
+				if (len > 0) {
+					editFrequency.setSelection(len);
+				}
+				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+				imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+				return false;
 			}
 		});
 
@@ -120,6 +108,26 @@ public class MainActivity extends Activity {
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 				editFrequency.setText("" + progress);
+			}
+		});
+
+		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.freq_list, android.R.layout.simple_spinner_item);
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		spinnerHighFrequency = (Spinner) findViewById(R.id.spinner);
+		spinnerHighFrequency.setAdapter(adapter);
+		spinnerHighFrequency.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+				// TODO 自動生成されたメソッド・スタブ
+				String item = (String) spinnerHighFrequency.getItemAtPosition(arg2);
+				seekBar.setProgress(Integer.parseInt(item));
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+				// TODO 自動生成されたメソッド・スタブ
+
 			}
 		});
 
@@ -210,7 +218,6 @@ public class MainActivity extends Activity {
 			textStatus.setText(strStatus + strStatuses[status]);
 		}
 	}
-
 	@Override
 	public void onPause() {
 		adView.pause();
